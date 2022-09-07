@@ -23,7 +23,7 @@ class BaseModel:
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
         else:
-            for key, value in kwargs:
+            for key, value in kwargs.items():
                 if key == 'created_at' or key == 'updated_at':
                     value = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
 
@@ -62,7 +62,7 @@ class BaseModel:
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
 
-        if "_sa_instance_state" in dictionary.keys():
+        if "_sa_instance_state" in dictionary:
             del dictionary["_sa_instance_state"]
 
         return dictionary

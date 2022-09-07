@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """This module defines a class to manage file storage for hbnb clone"""
-
 import json
 
 
@@ -10,17 +9,14 @@ class FileStorage:
     __objects = {}
 
     def all(self, cls=None):
-        """Returns a dictionary of models currently in storage
-        """
+        """Returns a dictionary of models currently in storage"""
         if cls is not None:
-            dict_cls = {}
-            for key, value in self.__objects.items():
-                token = key.split(".")
-                if token[0] == cls.__name__:
-                    dict_cls[key] = value
-            return dict_cls
-        else:
-            return FileStorage.__objects
+            ndict = dict()
+            for key, val in self.__objects.items():
+                if cls == val.__class__ or cls == val.__class__.__name__:
+                    ndict[key] = val
+            return ndict
+        return self.__objects
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
@@ -46,10 +42,10 @@ class FileStorage:
         from models.review import Review
 
         classes = {
-                    'BaseModel': BaseModel, 'User': User, 'Place': Place,
-                    'State': State, 'City': City, 'Amenity': Amenity,
-                    'Review': Review
-                  }
+            'BaseModel': BaseModel, 'User': User, 'Place': Place,
+            'State': State, 'City': City, 'Amenity': Amenity,
+            'Review': Review
+        }
         try:
             temp = {}
             with open(FileStorage.__file_path, 'r') as f:
@@ -60,11 +56,8 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        """
-        delete obj from __objects if its inside
-        """
+        """ Delete obj from __objects if it's inside """
         if obj is not None:
-            for key, value in self.__objects.items():
-                if value == obj:
-                    del self.__objects[key]
-                    break
+            key = obj.__class__.__name__ + '.' + obj.id
+            if key in self.__objects:
+                del (self.__objects[key])
