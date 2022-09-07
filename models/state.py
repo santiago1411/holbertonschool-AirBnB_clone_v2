@@ -25,4 +25,4 @@ class State(BaseModel, Base):
         for city in cities:
             if self.id == city.state_id:
                 result.append(city)
-        return(result)
+        return (result)
