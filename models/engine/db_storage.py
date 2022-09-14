@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+""" State Module for HBNB project """
 from os import getenv
 from sqlalchemy import (create_engine)
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -17,7 +18,7 @@ password = getenv('HBNB_MYSQL_PWD')
 host = getenv('HBNB_MYSQL_HOST')
 database = getenv('HBNB_MYSQL_DB')
 env = getenv('HBNB_ENV')
-engine_creat = 'mysql+mysqldb://{}:{}@{}/{}'.format(
+config = 'mysql+mysqldb://{}:{}@{}/{}'.format(
     user, password, host, database)
 
 
@@ -29,11 +30,13 @@ class DBStorage:
     __session = None
 
     def __init__(self):
-        self.__engine = create_engine(engine_creat, pool_pre_ping=True)
+        self.__engine = create_engine(config, pool_pre_ping=True)
 
-        """ drop all tables """
+        """ Drop all tables"""
         if env == "test":
-            Base.metadata.drop_all(self.__engine)
+            metadata = MetaData(self.__engine)
+            metadata.reflect()
+            metadata.drop_all()
 
     def all(self, cls=None):
         """Retrives a dictionary of class instances"""
@@ -60,26 +63,26 @@ class DBStorage:
         return new_dict
 
     def new(self, obj):
-        """ add new elements """
+        """ Add new elements """
         self.__session.add(obj)
 
     def save(self):
-        """
-        commit changes
-        """
+        """Commit all changes of the current database session"""
         self.__session.commit()
 
     def delete(self, obj=None):
-        """
-        delete from database
-        """
+        """Delete from the current database session obj if not None"""
         if obj is not None:
             self.__session.delete(obj)
 
     def reload(self):
-        """ create a session """
+        """Configure and create a session"""
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
+
+    def close(self):
+        """Public method to close the session"""
+        self.__session.close()
