@@ -1,0 +1,4 @@
+ALTER TABLE `cities` CHANGE `name` `name` VARCHAR(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL;
+ALTER TABLE `cities` CHANGE `state_id` `state_id` VARCHAR(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL;
+ALTER TABLE `states` CHANGE `id` `id` VARCHAR(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL;
+CREATE TABLE places ( id VARCHAR(60) NOT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, city_id VARCHAR(60) NOT NULL, user_id VARCHAR(60) NOT NULL, name VARCHAR(128) NOT NULL, description VARCHAR(1024), number_rooms INTEGER NOT NULL, number_bathrooms INTEGER NOT NULL, max_guest INTEGER NOT NULL, price_by_night INTEGER NOT NULL, latitude FLOAT, longitude FLOAT, PRIMARY KEY (id), UNIQUE (id), FOREIGN KEY(city_id) REFERENCES cities (id), FOREIGN KEY(user_id) REFERENCES users (id) );
