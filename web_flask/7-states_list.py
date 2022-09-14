@@ -15,6 +15,7 @@ def teardown_db(self):
     """After each request remove current SQLAlchemy session"""
     storage.close()
 
+
 @app.route("/states_list", strict_slashes=False)
 def routes():
     """Function that displays an HTML page"""
